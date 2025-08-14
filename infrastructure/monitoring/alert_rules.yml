@@ -1,0 +1,122 @@
+groups:
+  - name: seo_bot_application_alerts
+    rules:
+      - alert: ApplicationDown
+        expr: up{job="seo-bot-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: seo-bot
+        annotations:
+          summary: "SEO Bot application is down"
+          description: "The SEO Bot application has been down for more than 1 minute"
+          runbook_url: "https://docs.your-domain.com/runbooks/application-down"
+
+      - alert: ApplicationUnhealthy
+        expr: seo_bot_health_status{status!="healthy"} == 1
+        for: 2m
+        labels:
+          severity: critical
+          service: seo-bot
+        annotations:
+          summary: "SEO Bot application is unhealthy"
+          description: "The SEO Bot application health check is failing"
+
+      - alert: DatabaseConnectionFailed
+        expr: seo_bot_database_status{status!="healthy"} == 1
+        for: 30s
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "Database connection failed"
+          description: "The SEO Bot cannot connect to the database"
+
+      - alert: SlowDatabaseResponse
+        expr: seo_bot_database_response_time_ms > 5000
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "Slow database response times"
+          description: "Database response time is {{ $value }}ms, above 5 second threshold"
+
+  - name: seo_bot_resource_alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: seo_bot_cpu_percent > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is {{ $value }}%, above 80% threshold for more than 5 minutes"
+
+      - alert: HighMemoryUsage
+        expr: seo_bot_memory_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: system
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is {{ $value }}%, above 85% threshold for more than 5 minutes"
+
+      - alert: HighDiskUsage
+        expr: seo_bot_disk_percent > 90
+        for: 2m
+        labels:
+          severity: critical
+          service: system
+        annotations:
+          summary: "High disk usage detected"
+          description: "Disk usage is {{ $value }}%, above 90% threshold"
+
+  - name: seo_bot_legacy_alerts
+    rules:
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }} errors per second"
+
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High response time detected"
+          description: "95th percentile response time is {{ $value }} seconds"
+
+      - alert: DatabaseConnectionsHigh
+        expr: postgres_connections_active > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High database connections"
+          description: "Active database connections: {{ $value }}"
+
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) < 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Low disk space"
+          description: "Disk space usage is {{ $value }}%"
+
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service down"
+          description: "{{ $labels.job }} service is down"

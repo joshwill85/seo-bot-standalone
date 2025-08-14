@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Florida Local SEO Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar-transition { transition: transform 0.3s ease-in-out; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .florida-gradient { background: linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #FFD23F 100%); }
+        .metric-card { transition: all 0.3s ease; }
+        .metric-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .status-dot { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .table-row:hover { background-color: #f8fafc; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition transform">
+        <div class="flex items-center justify-center h-20 shadow-md">
+            <div class="flex items-center space-x-2">
+                <div class="florida-gradient w-10 h-10 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-xl">FL</span>
+                </div>
+                <span class="text-xl font-bold text-gray-800">Admin Panel</span>
+            </div>
+        </div>
+        
+        <nav class="mt-5">
+            <a href="#dashboard" class="sidebar-link active flex items-center px-6 py-3 text-gray-700 bg-blue-50 border-r-4 border-blue-500">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                </svg>
+                Dashboard
+            </a>
+            <a href="#businesses" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h3M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 8v-8a2 2 0 012-2h2a2 2 0 012 2v8"></path>
+                </svg>
+                Businesses
+            </a>
+            <a href="#seo-tools" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                SEO Tools
+            </a>
+            <a href="#analytics" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Analytics
+            </a>
+            <a href="#reports" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Reports
+            </a>
+            <a href="#settings" class="sidebar-link flex items-center px-6 py-3 text-gray-700 hover:bg-gray-50">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Settings
+            </a>
+        </nav>
+        
+        <div class="absolute bottom-0 w-full p-4">
+            <div class="bg-blue-50 rounded-lg p-3">
+                <div class="text-sm font-medium text-blue-800">System Status</div>
+                <div class="flex items-center mt-1">
+                    <div class="status-dot w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                    <span class="text-xs text-blue-600">All systems operational</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 flex flex-col">
+        <!-- Top Navigation -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center">
+                    <button id="sidebar-toggle" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <h1 class="ml-4 text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="bg-blue-100 text-blue-600 p-2 rounded-full hover:bg-blue-200 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5-5-5 5h5zm0 0v-5a2 2 0 00-2-2H8a2 2 0 00-2 2v5"></path>
+                            </svg>
+                        </button>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face&auto=format" 
+                             alt="Admin" class="w-8 h-8 rounded-full">
+                        <span class="text-sm font-medium text-gray-700">Admin User</span>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="flex-1 p-6">
+            <!-- Overview Metrics -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="metric-card bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-blue-100 rounded-lg">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h3M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 8v-8a2 2 0 012-2h2a2 2 0 012 2v8"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Businesses</p>
+                            <p class="text-2xl font-bold text-gray-900">247</p>
+                            <p class="text-xs text-green-600">+12 this month</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metric-card bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-green-100 rounded-lg">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Monthly Revenue</p>
+                            <p class="text-2xl font-bold text-gray-900">$58,420</p>
+                            <p class="text-xs text-green-600">+18.2% vs last month</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metric-card bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-yellow-100 rounded-lg">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Active Campaigns</p>
+                            <p class="text-2xl font-bold text-gray-900">189</p>
+                            <p class="text-xs text-blue-600">94.2% success rate</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metric-card bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center">
+                        <div class="p-2 bg-purple-100 rounded-lg">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Avg. Ranking Improvement</p>
+                            <p class="text-2xl font-bold text-gray-900">+12.3</p>
+                            <p class="text-xs text-green-600">positions gained</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-900">Recent Businesses</h3>
+                            <p class="text-sm text-gray-600">Latest client onboarding and status updates</p>
+                        </div>
+                        <div class="p-6">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full">
+                                    <thead>
+                                        <tr class="border-b border-gray-200">
+                                            <th class="text-left py-2 text-sm font-medium text-gray-600">Business</th>
+                                            <th class="text-left py-2 text-sm font-medium text-gray-600">Plan</th>
+                                            <th class="text-left py-2 text-sm font-medium text-gray-600">Status</th>
+                                            <th class="text-left py-2 text-sm font-medium text-gray-600">Last SEO Run</th>
+                                            <th class="text-left py-2 text-sm font-medium text-gray-600">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr class="table-row">
+                                            <td class="py-3">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                                        <span class="text-sm font-medium text-blue-600">MP</span>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-sm font-medium text-gray-900">Mario's Pizza</div>
+                                                        <div class="text-xs text-gray-500">Orlando, FL</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-3">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full">Professional</span>
+                                            </td>
+                                            <td class="py-3">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Active</span>
+                                            </td>
+                                            <td class="py-3 text-sm text-gray-600">2 hours ago</td>
+                                            <td class="py-3">
+                                                <div class="flex space-x-2">
+                                                    <button class="text-blue-600 hover:text-blue-800 text-sm" onclick="viewBusiness('mario-pizza')">View</button>
+                                                    <button class="text-green-600 hover:text-green-800 text-sm" onclick="runSEOTools('mario-pizza')">Run SEO</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="table-row">
+                                            <td class="py-3">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                                        <span class="text-sm font-medium text-green-600">TD</span>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-sm font-medium text-gray-900">Tampa Dental Care</div>
+                                                        <div class="text-xs text-gray-500">Tampa, FL</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-3">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold bg-purple-100 text-purple-800 rounded-full">Enterprise</span>
+                                            </td>
+                                            <td class="py-3">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Active</span>
+                                            </td>
+                                            <td class="py-3 text-sm text-gray-600">5 hours ago</td>
+                                            <td class="py-3">
+                                                <div class="flex space-x-2">
+                                                    <button class="text-blue-600 hover:text-blue-800 text-sm" onclick="viewBusiness('tampa-dental')">View</button>
+                                                    <button class="text-green-600 hover:text-green-800 text-sm" onclick="runSEOTools('tampa-dental')">Run SEO</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="table-row">
+                                            <td class="py-3">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                                                        <span class="text-sm font-medium text-yellow-600">JA</span>
+                                                    </div>
+                                                    <div>
+                                                        <div class="text-sm font-medium text-gray-900">Jacksonville Auto Repair</div>
+                                                        <div class="text-xs text-gray-500">Jacksonville, FL</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-3">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold bg-gray-100 text-gray-800 rounded-full">Starter</span>
+                                            </td>
+                                            <td class="py-3">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded-full">Setup</span>
+                                            </td>
+                                            <td class="py-3 text-sm text-gray-600">Never</td>
+                                            <td class="py-3">
+                                                <div class="flex space-x-2">
+                                                    <button class="text-blue-600 hover:text-blue-800 text-sm" onclick="viewBusiness('jacksonville-auto')">View</button>
+                                                    <button class="text-orange-600 hover:text-orange-800 text-sm" onclick="setupBusiness('jacksonville-auto')">Setup</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Quick SEO Tools -->
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-900">Quick SEO Tools</h3>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition text-sm font-medium" onclick="runBulkSEO()">
+                                Run Bulk SEO Analysis
+                            </button>
+                            <button class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition text-sm font-medium" onclick="generateReports()">
+                                Generate All Reports
+                            </button>
+                            <button class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm font-medium" onclick="updateCitations()">
+                                Update All Citations
+                            </button>
+                            <button class="w-full bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition text-sm font-medium" onclick="monitorRankings()">
+                                Monitor Rankings
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- System Health -->
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-900">System Health</h3>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">API Status</span>
+                                <div class="flex items-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                                    <span class="text-sm text-green-600">Operational</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">Database</span>
+                                <div class="flex items-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                                    <span class="text-sm text-green-600">Healthy</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">SEO Tools</span>
+                                <div class="flex items-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                                    <span class="text-sm text-green-600">Running</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">Monitoring</span>
+                                <div class="flex items-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                                    <span class="text-sm text-green-600">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">Revenue Trend</h3>
+                        <p class="text-sm text-gray-600">Monthly recurring revenue growth</p>
+                    </div>
+                    <div class="p-6">
+                        <canvas id="revenueChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">SEO Performance</h3>
+                        <p class="text-sm text-gray-600">Average ranking improvements</p>
+                    </div>
+                    <div class="p-6">
+                        <canvas id="seoChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Recent SEO Activity</h3>
+                    <p class="text-sm text-gray-600">Latest automated SEO tasks and results</p>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">
+                                    Citation update completed for Mario's Pizza
+                                </p>
+                                <p class="text-xs text-gray-500">Updated 15 local directories • 2 minutes ago</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">
+                                    Keyword ranking improved for Tampa Dental Care
+                                </p>
+                                <p class="text-xs text-gray-500">"Tampa dentist" moved from #12 to #7 • 15 minutes ago</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">
+                                    Review alert triggered for Orlando Plumbing
+                                </p>
+                                <p class="text-xs text-gray-500">New 2-star review requires attention • 1 hour ago</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">
+                                    Monthly report generated for all Enterprise clients
+                                </p>
+                                <p class="text-xs text-gray-500">47 reports sent to clients • 3 hours ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Business Detail Modal -->
+    <div id="businessModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900" id="modalBusinessName">Business Details</h3>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-6" id="modalContent">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Sample data - in real implementation, this would come from your backend
+        const businessData = {
+            'mario-pizza': {
+                name: 'Mario\'s Pizza',
+                location: 'Orlando, FL',
+                plan: 'Professional',
+                status: 'Active',
+                website: 'https://mariospizzaorlando.com',
+                phone: '(407) 555-0123',
+                email: 'info@mariospizzaorlando.com',
+                currentRankings: [
+                    { keyword: 'Orlando pizza', position: 3, change: +2 },
+                    { keyword: 'pizza delivery Orlando', position: 7, change: +1 },
+                    { keyword: 'best pizza Orlando', position: 12, change: -1 }
+                ],
+                seoHistory: [
+                    { date: '2025-01-10', action: 'Citation Update', result: 'Updated 15 directories', status: 'completed' },
+                    { date: '2025-01-09', action: 'Keyword Research', result: 'Found 23 new keywords', status: 'completed' },
+                    { date: '2025-01-08', action: 'Review Monitoring', result: 'New 5-star review detected', status: 'completed' }
+                ],
+                metrics: {
+                    monthlySearches: 15420,
+                    averagePosition: 8.3,
+                    citationAccuracy: 94,
+                    reviewScore: 4.6
+                }
+            },
+            'tampa-dental': {
+                name: 'Tampa Dental Care',
+                location: 'Tampa, FL',
+                plan: 'Enterprise',
+                status: 'Active',
+                website: 'https://tampadentalcare.com',
+                phone: '(813) 555-0456',
+                email: 'contact@tampadentalcare.com',
+                currentRankings: [
+                    { keyword: 'Tampa dentist', position: 7, change: +5 },
+                    { keyword: 'dental care Tampa', position: 4, change: +2 },
+                    { keyword: 'Tampa dental office', position: 9, change: 0 }
+                ],
+                seoHistory: [
+                    { date: '2025-01-10', action: 'Technical Audit', result: 'Fixed 8 SEO issues', status: 'completed' },
+                    { date: '2025-01-09', action: 'Content Optimization', result: 'Optimized 5 pages', status: 'completed' },
+                    { date: '2025-01-08', action: 'Local Listings', result: 'Created 12 new listings', status: 'completed' }
+                ],
+                metrics: {
+                    monthlySearches: 28750,
+                    averagePosition: 6.7,
+                    citationAccuracy: 98,
+                    reviewScore: 4.8
+                }
+            }
+        };
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                document.querySelectorAll('.sidebar-link').forEach(l => {
+                    l.classList.remove('active', 'bg-blue-50', 'border-r-4', 'border-blue-500');
+                    l.classList.add('hover:bg-gray-50');
+                });
+                
+                // Add active class to clicked link
+                this.classList.add('active', 'bg-blue-50', 'border-r-4', 'border-blue-500');
+                this.classList.remove('hover:bg-gray-50');
+                
+                // Load corresponding content
+                const section = this.getAttribute('href').substring(1);
+                loadSection(section);
+            });
+        });
+
+        function loadSection(section) {
+            // This would load different sections of the admin panel
+            console.log('Loading section:', section);
+        }
+
+        function viewBusiness(businessId) {
+            const business = businessData[businessId];
+            if (!business) return;
+            
+            document.getElementById('modalBusinessName').textContent = business.name;
+            
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-4">Business Information</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Location:</span>
+                                <span class="font-medium">${business.location}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Plan:</span>
+                                <span class="font-medium">${business.plan}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Status:</span>
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">${business.status}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Website:</span>
+                                <a href="${business.website}" target="_blank" class="text-blue-600 hover:underline">${business.website}</a>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Phone:</span>
+                                <span class="font-medium">${business.phone}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Email:</span>
+                                <span class="font-medium">${business.email}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-4">SEO Metrics</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Monthly Searches:</span>
+                                <span class="font-medium">${business.metrics.monthlySearches.toLocaleString()}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Average Position:</span>
+                                <span class="font-medium">#${business.metrics.averagePosition}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Citation Accuracy:</span>
+                                <span class="font-medium">${business.metrics.citationAccuracy}%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Review Score:</span>
+                                <span class="font-medium">${business.metrics.reviewScore}★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">Current Rankings</h4>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full border border-gray-200 rounded-lg">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Keyword</th>
+                                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Position</th>
+                                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Change</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                ${business.currentRankings.map(ranking => `
+                                    <tr>
+                                        <td class="px-4 py-2 text-sm text-gray-900">${ranking.keyword}</td>
+                                        <td class="px-4 py-2 text-sm text-gray-900">#${ranking.position}</td>
+                                        <td class="px-4 py-2 text-sm">
+                                            <span class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-full ${
+                                                ranking.change > 0 ? 'bg-green-100 text-green-800' : 
+                                                ranking.change < 0 ? 'bg-red-100 text-red-800' : 
+                                                'bg-gray-100 text-gray-800'
+                                            }">
+                                                ${ranking.change > 0 ? '+' : ''}${ranking.change}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">SEO History</h4>
+                    <div class="space-y-3">
+                        ${business.seoHistory.map(entry => `
+                            <div class="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">${entry.action}</p>
+                                    <p class="text-xs text-gray-600">${entry.result}</p>
+                                    <p class="text-xs text-gray-500">${entry.date}</p>
+                                </div>
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
+                                    ${entry.status}
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button onclick="runSEOTools('${businessId}')" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                        Run SEO Analysis
+                    </button>
+                    <button onclick="generateBusinessReport('${businessId}')" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                        Generate Report
+                    </button>
+                    <button onclick="closeModal()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition">
+                        Close
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('businessModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('businessModal').classList.add('hidden');
+        }
+
+        function runSEOTools(businessId) {
+            alert(`Running SEO tools for business: ${businessId}\n\nThis would execute:\n- Keyword ranking check\n- Citation audit\n- Technical SEO scan\n- Competitor analysis\n- Review monitoring\n\nResults will be added to the SEO history.`);
+        }
+
+        function runBulkSEO() {
+            alert('Running bulk SEO analysis for all active businesses...\n\nThis would execute all SEO tools across your entire client base.');
+        }
+
+        function generateReports() {
+            alert('Generating monthly reports for all clients...\n\nReports will include:\n- Ranking improvements\n- Citation status\n- Review summary\n- Technical issues\n- Recommendations');
+        }
+
+        function updateCitations() {
+            alert('Updating citations for all businesses...\n\nThis will:\n- Check all local directories\n- Update outdated information\n- Create new listings\n- Fix inconsistencies');
+        }
+
+        function monitorRankings() {
+            alert('Starting ranking monitoring for all tracked keywords...\n\nThis will check positions for all businesses and alert on significant changes.');
+        }
+
+        function setupBusiness(businessId) {
+            alert(`Setting up business: ${businessId}\n\nThis would:\n- Complete onboarding process\n- Initial SEO audit\n- Set up monitoring\n- Create baseline reports`);
+        }
+
+        function generateBusinessReport(businessId) {
+            alert(`Generating detailed report for business: ${businessId}\n\nReport will include:\n- Current rankings\n- SEO improvements\n- Citation status\n- Technical health\n- Recommendations`);
+        }
+
+        // Initialize charts
+        window.onload = function() {
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Revenue',
+                        data: [42000, 45000, 48000, 51000, 55000, 58420],
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // SEO Performance Chart
+            const seoCtx = document.getElementById('seoChart').getContext('2d');
+            new Chart(seoCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Orlando', 'Tampa', 'Jacksonville', 'St. Pete', 'Clearwater'],
+                    datasets: [{
+                        label: 'Avg. Position Improvement',
+                        data: [12, 15, 8, 11, 14],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(168, 85, 247, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '+' + value + ' positions';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>

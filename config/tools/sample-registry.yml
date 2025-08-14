@@ -1,0 +1,195 @@
+version: '1.0'
+categories:
+  seo: SEO & Marketing Tools
+  business: Business Calculators
+  finance: Financial Tools
+  technical: Technical Utilities
+calculators:
+- id: keyword_density
+  title: Keyword Density Calculator
+  description: Calculate keyword density and frequency for SEO optimization
+  category: seo
+  inputs:
+  - name: content
+    type: text
+    label: Content Text
+    description: Paste your content to analyze
+    required: true
+    placeholder: Enter your content here...
+  - name: target_keyword
+    type: text
+    label: Target Keyword
+    description: Primary keyword to analyze
+    required: true
+    placeholder: e.g., SEO optimization
+  - name: max_density
+    type: number
+    label: Maximum Density (%)
+    description: Recommended maximum keyword density
+    required: false
+    default_value: 3.0
+    min_value: 0.5
+    max_value: 10.0
+    step: 0.1
+    unit: '%'
+  outputs:
+  - name: keyword_density
+    label: Keyword Density
+    type: percentage
+    highlight: true
+    decimal_places: 1
+  - name: keyword_count
+    label: Keyword Count
+    type: number
+    decimal_places: 0
+  - name: total_words
+    label: Total Words
+    type: number
+    decimal_places: 0
+  - name: density_status
+    label: SEO Status
+    type: text
+  formulas:
+  - name: word_count
+    expression: len(content.split())
+    description: Count total words in content
+  - name: keyword_occurrences
+    expression: content.lower().count(target_keyword.lower())
+    description: Count keyword occurrences
+  - name: keyword_density
+    expression: (keyword_occurrences / word_count) * 100 if word_count > 0 else 0
+    description: Calculate keyword density percentage
+    depends_on:
+    - word_count
+    - keyword_occurrences
+    round_to: 2
+  - name: keyword_count
+    expression: keyword_occurrences
+    depends_on:
+    - keyword_occurrences
+  - name: total_words
+    expression: word_count
+    depends_on:
+    - word_count
+  - name: density_status
+    expression: '"Optimal" if keyword_density <= max_density else "Too High"'
+    depends_on:
+    - keyword_density
+  validations:
+  - field_name: content
+    rules:
+    - len(content) >= 50
+    error_messages:
+      len(content) >= 50: Content must be at least 50 characters
+  metadata:
+    title: Keyword Density Calculator for SEO
+    description: Analyze keyword density to optimize your content for search engines
+      while avoiding keyword stuffing.
+    keywords:
+    - keyword density
+    - SEO
+    - content optimization
+    - keyword frequency
+    author: SEO Bot
+    application_category: BusinessApplication
+    operating_system:
+    - Web
+    software_version: '1.0'
+- id: page_load_budget
+  title: Page Load Time Budget Calculator
+  description: Calculate performance budgets for different page types and connection
+    speeds
+  category: technical
+  inputs:
+  - name: page_type
+    type: select
+    label: Page Type
+    required: true
+    options:
+    - value: landing
+      label: Landing Page
+    - value: article
+      label: Article/Blog Post
+    - value: product
+      label: Product Page
+    - value: category
+      label: Category Page
+  - name: connection_speed
+    type: select
+    label: Target Connection Speed
+    required: true
+    options:
+    - value: fast_3g
+      label: Fast 3G (1.6 Mbps)
+    - value: slow_3g
+      label: Slow 3G (400 Kbps)
+    - value: fast_4g
+      label: Fast 4G (9 Mbps)
+    - value: broadband
+      label: Broadband (10+ Mbps)
+  - name: target_lcp
+    type: number
+    label: Target LCP (seconds)
+    description: Largest Contentful Paint target
+    default_value: 2.5
+    min_value: 1.0
+    max_value: 5.0
+    step: 0.1
+  outputs:
+  - name: js_budget_kb
+    label: JavaScript Budget
+    type: number
+    unit: KB
+    highlight: true
+  - name: css_budget_kb
+    label: CSS Budget
+    type: number
+    unit: KB
+  - name: image_budget_kb
+    label: Image Budget
+    type: number
+    unit: KB
+  - name: total_budget_kb
+    label: Total Page Budget
+    type: number
+    unit: KB
+  formulas:
+  - name: connection_factor
+    expression: '{"slow_3g": 0.5, "fast_3g": 0.8, "fast_4g": 1.2, "broadband": 1.5}[connection_speed]'
+  - name: page_factor
+    expression: '{"landing": 1.0, "article": 0.8, "product": 1.2, "category": 0.9}[page_type]'
+  - name: base_js_budget
+    expression: 200 * connection_factor * page_factor
+    depends_on:
+    - connection_factor
+    - page_factor
+  - name: js_budget_kb
+    expression: round(base_js_budget)
+    depends_on:
+    - base_js_budget
+  - name: css_budget_kb
+    expression: round(js_budget_kb * 0.4)
+    depends_on:
+    - js_budget_kb
+  - name: image_budget_kb
+    expression: round(js_budget_kb * 2.5)
+    depends_on:
+    - js_budget_kb
+  - name: total_budget_kb
+    expression: js_budget_kb + css_budget_kb + image_budget_kb
+    depends_on:
+    - js_budget_kb
+    - css_budget_kb
+    - image_budget_kb
+  metadata:
+    title: Page Load Time Budget Calculator
+    description: Calculate performance budgets to ensure fast page load times across
+      different devices and connection speeds.
+    keywords:
+    - performance budget
+    - page speed
+    - web performance
+    - LCP
+    - Core Web Vitals
+    author: SEO Bot
+    application_category: DeveloperApplication

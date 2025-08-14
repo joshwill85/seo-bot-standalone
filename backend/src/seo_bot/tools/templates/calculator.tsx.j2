@@ -1,0 +1,300 @@
+import React, { useState, useEffect, useMemo } from 'react';
+{% if has_charts %}
+import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+{% endif %}
+
+interface {{ component_name }}Props {
+  onCalculate?: (result: any) => void;
+  theme?: 'light' | 'dark' | 'modern';
+  className?: string;
+}
+
+interface InputValues {
+  {% for input in spec.inputs %}
+  {{ input.name }}: {{ 'string' if input.type == 'text' else ('boolean' if input.type == 'checkbox' else 'number') }};
+  {% endfor %}
+}
+
+interface OutputValues {
+  {% for output in spec.outputs %}
+  {{ output.name }}: any;
+  {% endfor %}
+}
+
+const {{ component_name }}: React.FC<{{ component_name }}Props> = ({ 
+  onCalculate, 
+  theme = 'modern', 
+  className = '' 
+}) => {
+  const [inputs, setInputs] = useState<InputValues>({
+    {% for input in spec.inputs %}
+    {{ input.name }}: {{ input.default_value | to_json if input.default_value else ('""' if input.type == 'text' else ('false' if input.type == 'checkbox' else '0')) }},
+    {% endfor %}
+  });
+
+  const [outputs, setOutputs] = useState<OutputValues>({
+    {% for output in spec.outputs %}
+    {{ output.name }}: null,
+    {% endfor %}
+  });
+
+  const [errors, setErrors] = useState<string[]>([]);
+  const [isCalculating, setIsCalculating] = useState(false);
+
+  // Validation rules
+  const validateInputs = (values: InputValues): string[] => {
+    const validationErrors: string[] = [];
+    
+    {% for input in required_inputs %}
+    {% if input.type == 'text' %}
+    if (!values.{{ input.name }} || values.{{ input.name }}.trim() === '') {
+      validationErrors.push('{{ input.label }} is required');
+    }
+    {% endif %}
+    {% if input.min_value is not none %}
+    if (values.{{ input.name }} < {{ input.min_value }}) {
+      validationErrors.push('{{ input.label }} must be at least {{ input.min_value }}');
+    }
+    {% endif %}
+    {% if input.max_value is not none %}
+    if (values.{{ input.name }} > {{ input.max_value }}) {
+      validationErrors.push('{{ input.label }} must be at most {{ input.max_value }}');
+    }
+    {% endif %}
+    {% endfor %}
+
+    return validationErrors;
+  };
+
+  // Formula calculations
+  const calculate = useMemo(() => {
+    return (values: InputValues) => {
+      try {
+        setIsCalculating(true);
+        const validationErrors = validateInputs(values);
+        
+        if (validationErrors.length > 0) {
+          setErrors(validationErrors);
+          return;
+        }
+
+        // Execute formulas (simplified - in real implementation, use proper formula evaluator)
+        const results: any = { ...values };
+        
+        {% for formula in spec.formulas %}
+        {% if formula.name in [output.name for output in spec.outputs] %}
+        // {{ formula.description }}
+        try {
+          {% if formula.expression == 'len(content.split())' %}
+          results.{{ formula.name }} = values.content ? values.content.split(' ').length : 0;
+          {% elif formula.expression == 'content.lower().count(target_keyword.lower())' %}
+          results.{{ formula.name }} = values.content && values.target_keyword ? 
+            (values.content.toLowerCase().match(new RegExp(values.target_keyword.toLowerCase(), 'g')) || []).length : 0;
+          {% elif 'keyword_density' in formula.expression %}
+          results.{{ formula.name }} = results.word_count > 0 ? 
+            Math.round((results.keyword_occurrences / results.word_count) * 100 * 100) / 100 : 0;
+          {% elif formula.expression == 'keyword_occurrences' %}
+          results.{{ formula.name }} = results.keyword_occurrences || 0;
+          {% elif formula.expression == 'word_count' %}
+          results.{{ formula.name }} = results.word_count || 0;
+          {% elif 'density_status' in formula.expression %}
+          results.{{ formula.name }} = results.keyword_density <= values.max_density ? 'Optimal' : 'Too High';
+          {% else %}
+          // Custom formula: {{ formula.expression }}
+          results.{{ formula.name }} = 0; // Placeholder - implement formula evaluator
+          {% endif %}
+        } catch (e) {
+          console.error('Formula error for {{ formula.name }}:', e);
+          results.{{ formula.name }} = 0;
+        }
+        {% endif %}
+        {% endfor %}
+
+        const outputResults: OutputValues = {
+          {% for output in spec.outputs %}
+          {{ output.name }}: results.{{ output.name }},
+          {% endfor %}
+        };
+
+        setOutputs(outputResults);
+        setErrors([]);
+        
+        if (onCalculate) {
+          onCalculate({
+            inputs: values,
+            outputs: outputResults,
+            calculatorId: '{{ spec.id }}'
+          });
+        }
+
+      } catch (error) {
+        setErrors(['Calculation failed. Please check your inputs.']);
+        console.error('Calculation error:', error);
+      } finally {
+        setIsCalculating(false);
+      }
+    };
+  }, [onCalculate]);
+
+  // Auto-calculate when inputs change
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      calculate(inputs);
+    }, 300); // Debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [inputs, calculate]);
+
+  const handleInputChange = (name: keyof InputValues, value: any) => {
+    setInputs(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const themeClasses = {
+    light: 'bg-white border-gray-300 text-gray-900',
+    dark: 'bg-gray-800 border-gray-600 text-gray-100',
+    modern: 'bg-gradient-to-br from-blue-50 to-indigo-100 border-blue-200 text-gray-900'
+  };
+
+  return (
+    <div className={`calculator-widget p-6 rounded-lg border ${themeClasses[theme]} ${className}`}>
+      <div className="calculator-header mb-6">
+        <h2 className="text-2xl font-bold mb-2">{{ spec.title }}</h2>
+        <p className="text-gray-600">{{ spec.description }}</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Input Section */}
+        <div className="inputs-section">
+          <h3 className="text-lg font-semibold mb-4">Inputs</h3>
+          
+          {% for input in spec.inputs %}
+          <div className="input-group mb-4">
+            <label className="block text-sm font-medium mb-2">
+              {{ input.label }}
+              {% if input.required %}<span className="text-red-500">*</span>{% endif %}
+            </label>
+            
+            {% if input.type == 'text' %}
+            <textarea
+              value={inputs.{{ input.name }}}
+              onChange={(e) => handleInputChange('{{ input.name }}', e.target.value)}
+              placeholder="{{ input.placeholder or '' }}"
+              className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              rows={4}
+            />
+            {% elif input.type == 'number' %}
+            <input
+              type="number"
+              value={inputs.{{ input.name }}}
+              onChange={(e) => handleInputChange('{{ input.name }}', parseFloat(e.target.value) || 0)}
+              placeholder="{{ input.placeholder or '' }}"
+              min="{{ input.min_value or '' }}"
+              max="{{ input.max_value or '' }}"
+              step="{{ input.step or '' }}"
+              className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            {% elif input.type == 'select' %}
+            <select
+              value={inputs.{{ input.name }}}
+              onChange={(e) => handleInputChange('{{ input.name }}', e.target.value)}
+              className="w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              {% for option in input.options %}
+              <option value="{{ option.value }}">{{ option.label }}</option>
+              {% endfor %}
+            </select>
+            {% elif input.type == 'checkbox' %}
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={inputs.{{ input.name }}}
+                onChange={(e) => handleInputChange('{{ input.name }}', e.target.checked)}
+                className="mr-2"
+              />
+              {{ input.description or input.label }}
+            </label>
+            {% endif %}
+            
+            {% if input.help_text %}
+            <p className="text-sm text-gray-500 mt-1">{{ input.help_text }}</p>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+
+        {/* Output Section */}
+        <div className="outputs-section">
+          <h3 className="text-lg font-semibold mb-4">Results</h3>
+          
+          {errors.length > 0 && (
+            <div className="error-messages mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              <ul className="list-disc list-inside">
+                {errors.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {isCalculating && (
+            <div className="calculating-spinner mb-4 text-center">
+              <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+              <span className="ml-2">Calculating...</span>
+            </div>
+          )}
+
+          <div className="results-grid space-y-4">
+            {% for output in spec.outputs %}
+            <div className="result-item p-4 bg-white rounded-lg shadow-sm border {% if output.highlight %}ring-2 ring-blue-500{% endif %}">
+              <div className="result-label text-sm font-medium text-gray-600">
+                {{ output.label }}
+              </div>
+              <div className="result-value text-2xl font-bold {% if output.highlight %}text-blue-600{% else %}text-gray-900{% endif %}">
+                {outputs.{{ output.name }} !== null ? (
+                  {% if output.type == 'percentage' %}
+                  `${outputs.{{ output.name }}}%`
+                  {% elif output.type == 'currency' %}
+                  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(outputs.{{ output.name }})
+                  {% elif output.type == 'number' %}
+                  typeof outputs.{{ output.name }} === 'number' ? outputs.{{ output.name }}.toLocaleString() : outputs.{{ output.name }}
+                  {% else %}
+                  outputs.{{ output.name }}
+                  {% endif %}
+                  {% if output.unit %} {{ output.unit }}{% endif %}
+                ) : '-'}
+              </div>
+              {% if output.description %}
+              <div className="result-description text-sm text-gray-500 mt-1">
+                {{ output.description }}
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      {% if spec.show_step_by_step %}
+      <div className="step-by-step mt-6">
+        <h3 className="text-lg font-semibold mb-4">Step-by-Step Calculation</h3>
+        <div className="steps bg-gray-50 p-4 rounded-lg">
+          {/* Implementation for step-by-step would go here */}
+          <p className="text-sm text-gray-600">Step-by-step calculation details...</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <div className="calculator-footer mt-6 pt-4 border-t border-gray-200">
+        <p className="text-xs text-gray-500">
+          Powered by {{ spec.metadata.author or 'SEO Bot' }} | 
+          <a href="#" className="text-blue-600 hover:underline ml-1">Learn More</a>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default {{ component_name }};
