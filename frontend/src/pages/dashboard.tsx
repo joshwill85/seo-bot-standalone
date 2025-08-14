@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks/use-auth'
 import { Navigate } from 'react-router-dom'
 import { mockBusinessesWithCampaigns, mockUsers } from '@/data/mockData'
 import SEODashboard from '@/components/SEODashboard'
@@ -155,7 +155,7 @@ export default function DashboardPage() {
             /* SEO Dashboard */
             <div>
               {/* Business Header */}
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-florida-blue-100 rounded-lg flex items-center justify-center">
                     <Building2 className="w-6 h-6 text-florida-blue-600" />
@@ -196,7 +196,7 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* SEO Dashboard Component */}
+              {/* Customer Performance Dashboard - Read Only */}
               <SEODashboard 
                 businessId={selectedBusiness.id} 
                 businessName={selectedBusiness.name}

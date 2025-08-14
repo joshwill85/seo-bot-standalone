@@ -1,7 +1,9 @@
-import { Users, DollarSign, TrendingUp, Search, Globe, Star, ArrowUpRight, ArrowDownRight, Play, BarChart3, FileText, Zap, AlertCircle, CheckCircle, Settings } from 'lucide-react'
+import { Users, DollarSign, TrendingUp, Search, Globe, Star, ArrowUpRight, ArrowDownRight, Play, BarChart3, FileText, Zap, AlertCircle, CheckCircle, Settings, X, PieChart, Activity } from 'lucide-react'
 import { mockBusinessesWithCampaigns, platformStats } from '@/data/mockData'
 import { useState } from 'react'
-import CampaignManager from '@/components/CampaignManager'
+import CustomerProfileManager from '@/components/Customer/CustomerProfileManager'
+import BusinessIntelligenceDashboard from '@/components/Admin/BusinessIntelligenceDashboard'
+import SEOExecutionLogs from '@/components/Admin/SEOExecutionLogs'
 
 const StatCard = ({ title, value, change, icon: Icon, prefix = '', suffix = '' }: {
   title: string
@@ -251,14 +253,14 @@ const BusinessCard = ({ business, onManageCampaigns }: { business: any, onManage
           </button>
         </div>
         
-        {/* Campaign Management Button */}
+        {/* SEO Services Management Button */}
         <div className="mt-3 pt-3 border-t border-gray-200">
           <button
             onClick={() => onManageCampaigns(business)}
-            className="w-full flex items-center justify-center px-3 py-2 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="w-full flex items-center justify-center px-3 py-2 text-xs font-medium text-white bg-florida-blue-600 hover:bg-florida-blue-700 rounded-md transition-colors"
           >
-            <Settings className="w-3 h-3 mr-1" />
-            Manage Campaigns
+            <Zap className="w-3 h-3 mr-1" />
+            Manage 39 SEO Services
           </button>
         </div>
       </div>
@@ -281,11 +283,12 @@ const BusinessCard = ({ business, onManageCampaigns }: { business: any, onManage
 
 export default function AdminPage() {
   const [selectedBusiness, setSelectedBusiness] = useState<any>(null)
-  const [showCampaignManager, setShowCampaignManager] = useState(false)
+  const [showServiceManager, setShowServiceManager] = useState(false)
+  const [activeTab, setActiveTab] = useState<'overview' | 'business-intelligence' | 'execution-logs' | 'client-management'>('overview')
 
   const handleManageCampaigns = (business: any) => {
     setSelectedBusiness(business)
-    setShowCampaignManager(true)
+    setShowServiceManager(true)
   }
 
   return (
@@ -312,229 +315,307 @@ export default function AdminPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard
-              title="Total Businesses"
-              value={platformStats.totalBusinesses}
-              change={15.2}
-              icon={Users}
-            />
-            <StatCard
-              title="Active Subscriptions"
-              value={platformStats.activeSubscriptions}
-              change={8.1}
-              icon={Star}
-            />
-            <StatCard
-              title="Monthly Revenue"
-              value={platformStats.monthlyRevenue}
-              change={12.5}
-              icon={DollarSign}
-              prefix="$"
-            />
-            <StatCard
-              title="Avg SEO Score"
-              value={platformStats.averageSEOScore}
-              change={6.7}
-              icon={TrendingUp}
-              suffix="/100"
-            />
-          </div>
-
-          {/* Secondary Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard
-              title="Keywords Tracked"
-              value={platformStats.totalKeywordsTracked}
-              change={23.4}
-              icon={Search}
-            />
-            <StatCard
-              title="Total Organic Traffic"
-              value={platformStats.totalOrganicTraffic}
-              change={18.9}
-              icon={Globe}
-            />
-            <StatCard
-              title="Active Campaigns"
-              value={platformStats.activeCampaigns}
-              change={5.3}
-              icon={Play}
-            />
-            <StatCard
-              title="Content Briefs"
-              value={platformStats.totalContentBriefs}
-              change={42.1}
-              icon={FileText}
-            />
-          </div>
-
-          {/* Recent Performance */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Top Performing Businesses</h2>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SEO Score</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Traffic</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {mockBusinessesWithCampaigns
-                    .sort((a, b) => b.seoScore - a.seoScore)
-                    .slice(0, 5)
-                    .map((business) => (
-                    <tr key={business.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-4">
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">{business.name}</div>
-                          <div className="text-sm text-gray-500">{business.owner}</div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className="text-sm text-gray-900">{business.plan}</span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex items-center">
-                          <div className={`text-sm font-medium ${
-                            business.seoScore >= 80 ? 'text-green-600' : 
-                            business.seoScore >= 60 ? 'text-yellow-600' : 'text-red-600'
-                          }`}>
-                            {business.seoScore}/100
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 text-sm text-gray-900">
-                        {business.organicTraffic.toLocaleString()}
-                      </td>
-                      <td className="px-4 py-4 text-sm text-gray-900">
-                        ${business.monthlySpend}/mo
-                      </td>
-                      <td className="px-4 py-4">
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          business.status === 'active' ? 'bg-green-100 text-green-800' :
-                          business.status === 'audit_complete' ? 'bg-blue-100 text-blue-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
-                          {business.status.replace('_', ' ')}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* All Businesses Grid */}
+          {/* Navigation Tabs */}
           <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">All Customer Accounts</h2>
-              <div className="text-sm text-gray-500">
-                {mockBusinessesWithCampaigns.length} businesses • {mockBusinessesWithCampaigns.filter(b => b.status === 'active').length} active
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockBusinessesWithCampaigns.map((business) => (
-                <BusinessCard key={business.id} business={business} onManageCampaigns={handleManageCampaigns} />
-              ))}
+            <div className="border-b border-gray-200">
+              <nav className="-mb-px flex space-x-8">
+                <button
+                  onClick={() => setActiveTab('overview')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'overview' 
+                      ? 'border-florida-blue-500 text-florida-blue-600' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <BarChart3 className="w-4 h-4 inline mr-2" />
+                  Overview
+                </button>
+                <button
+                  onClick={() => setActiveTab('business-intelligence')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'business-intelligence' 
+                      ? 'border-florida-blue-500 text-florida-blue-600' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <PieChart className="w-4 h-4 inline mr-2" />
+                  Business Intelligence
+                </button>
+                <button
+                  onClick={() => setActiveTab('execution-logs')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'execution-logs' 
+                      ? 'border-florida-blue-500 text-florida-blue-600' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <Activity className="w-4 h-4 inline mr-2" />
+                  Execution Logs
+                </button>
+                <button
+                  onClick={() => setActiveTab('client-management')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'client-management' 
+                      ? 'border-florida-blue-500 text-florida-blue-600' 
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <Users className="w-4 h-4 inline mr-2" />
+                  Client Management
+                </button>
+              </nav>
             </div>
           </div>
+          {/* Tab Content */}
+          {activeTab === 'overview' && (
+            <div>
+              {/* Stats Overview */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <StatCard
+                  title="Total Businesses"
+                  value={platformStats.totalBusinesses}
+                  change={15.2}
+                  icon={Users}
+                />
+                <StatCard
+                  title="Active Subscriptions"
+                  value={platformStats.activeSubscriptions}
+                  change={8.1}
+                  icon={Star}
+                />
+                <StatCard
+                  title="Monthly Revenue"
+                  value={platformStats.monthlyRevenue}
+                  change={12.5}
+                  icon={DollarSign}
+                  prefix="$"
+                />
+                <StatCard
+                  title="Avg SEO Score"
+                  value={platformStats.averageSEOScore}
+                  change={6.7}
+                  icon={TrendingUp}
+                  suffix="/100"
+                />
+              </div>
 
-          {/* SEO Platform Analytics */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Platform Performance */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Platform Performance</h2>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 bg-florida-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-florida-blue-900">67%</div>
-                  <div className="text-sm text-gray-600">Avg Traffic Increase</div>
-                  <div className="text-xs text-gray-500 mt-1">Past 6 months</div>
+              {/* Secondary Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <StatCard
+                  title="Keywords Tracked"
+                  value={platformStats.totalKeywordsTracked}
+                  change={23.4}
+                  icon={Search}
+                />
+                <StatCard
+                  title="Total Organic Traffic"
+                  value={platformStats.totalOrganicTraffic}
+                  change={18.9}
+                  icon={Globe}
+                />
+                <StatCard
+                  title="Active Campaigns"
+                  value={platformStats.activeCampaigns}
+                  change={5.3}
+                  icon={Play}
+                />
+                <StatCard
+                  title="Content Briefs"
+                  value={platformStats.totalContentBriefs}
+                  change={42.1}
+                  icon={FileText}
+                />
+              </div>
+
+              {/* Recent Performance */}
+              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-6">Top Performing Businesses</h2>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Plan</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SEO Score</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Traffic</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {mockBusinessesWithCampaigns
+                        .sort((a, b) => b.seoScore - a.seoScore)
+                        .slice(0, 5)
+                        .map((business) => (
+                        <tr key={business.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-4">
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">{business.name}</div>
+                              <div className="text-sm text-gray-500">{business.owner}</div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4">
+                            <span className="text-sm text-gray-900">{business.plan}</span>
+                          </td>
+                          <td className="px-4 py-4">
+                            <div className="flex items-center">
+                              <div className={`text-sm font-medium ${
+                                business.seoScore >= 80 ? 'text-green-600' : 
+                                business.seoScore >= 60 ? 'text-yellow-600' : 'text-red-600'
+                              }`}>
+                                {business.seoScore}/100
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 text-sm text-gray-900">
+                            {business.organicTraffic.toLocaleString()}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-gray-900">
+                            ${business.monthlySpend}/mo
+                          </td>
+                          <td className="px-4 py-4">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              business.status === 'active' ? 'bg-green-100 text-green-800' :
+                              business.status === 'audit_complete' ? 'bg-blue-100 text-blue-800' :
+                              'bg-gray-100 text-gray-800'
+                            }`}>
+                              {business.status.replace('_', ' ')}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* SEO Platform Analytics */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                {/* Platform Performance */}
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <h2 className="text-xl font-bold text-gray-900 mb-6">Platform Performance</h2>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center p-4 bg-florida-blue-50 rounded-lg">
+                      <div className="text-2xl font-bold text-florida-blue-900">67%</div>
+                      <div className="text-sm text-gray-600">Avg Traffic Increase</div>
+                      <div className="text-xs text-gray-500 mt-1">Past 6 months</div>
+                    </div>
+                    
+                    <div className="text-center p-4 bg-florida-orange-50 rounded-lg">
+                      <div className="text-2xl font-bold text-florida-orange-900">4.2</div>
+                      <div className="text-sm text-gray-600">Customer Rating</div>
+                      <div className="text-xs text-gray-500 mt-1">Out of 5 stars</div>
+                    </div>
+                    
+                    <div className="text-center p-4 bg-florida-green-50 rounded-lg">
+                      <div className="text-2xl font-bold text-florida-green-900">94%</div>
+                      <div className="text-sm text-gray-600">Customer Retention</div>
+                      <div className="text-xs text-gray-500 mt-1">12-month period</div>
+                    </div>
+                    
+                    <div className="text-center p-4 bg-purple-50 rounded-lg">
+                      <div className="text-2xl font-bold text-purple-900">{platformStats.publishedContent}</div>
+                      <div className="text-sm text-gray-600">Published Content</div>
+                      <div className="text-xs text-gray-500 mt-1">This month</div>
+                    </div>
+                  </div>
                 </div>
                 
-                <div className="text-center p-4 bg-florida-orange-50 rounded-lg">
-                  <div className="text-2xl font-bold text-florida-orange-900">4.2</div>
-                  <div className="text-sm text-gray-600">Customer Rating</div>
-                  <div className="text-xs text-gray-500 mt-1">Out of 5 stars</div>
-                </div>
-                
-                <div className="text-center p-4 bg-florida-green-50 rounded-lg">
-                  <div className="text-2xl font-bold text-florida-green-900">94%</div>
-                  <div className="text-sm text-gray-600">Customer Retention</div>
-                  <div className="text-xs text-gray-500 mt-1">12-month period</div>
-                </div>
-                
-                <div className="text-center p-4 bg-purple-50 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-900">{platformStats.publishedContent}</div>
-                  <div className="text-sm text-gray-600">Published Content</div>
-                  <div className="text-xs text-gray-500 mt-1">This month</div>
+                {/* Current SEO Tasks */}
+                <div className="bg-white rounded-lg shadow-md p-6">
+                  <h2 className="text-xl font-bold text-gray-900 mb-6">SEO Automation Status</h2>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                      <div className="flex items-center">
+                        <CheckCircle className="w-5 h-5 text-green-600 mr-3" />
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">Running Tasks</div>
+                          <div className="text-xs text-gray-500">{platformStats.runningTasks} currently active</div>
+                        </div>
+                      </div>
+                      <div className="text-lg font-bold text-green-600">{platformStats.runningTasks}</div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                      <div className="flex items-center">
+                        <AlertCircle className="w-5 h-5 text-yellow-600 mr-3" />
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">Pending Tasks</div>
+                          <div className="text-xs text-gray-500">{platformStats.pendingTasks} in queue</div>
+                        </div>
+                      </div>
+                      <div className="text-lg font-bold text-yellow-600">{platformStats.pendingTasks}</div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center">
+                        <Zap className="w-5 h-5 text-gray-600 mr-3" />
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">Total Campaigns</div>
+                          <div className="text-xs text-gray-500">{platformStats.activeCampaigns} active campaigns</div>
+                        </div>
+                      </div>
+                      <div className="text-lg font-bold text-gray-600">{platformStats.activeCampaigns}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            
-            {/* Current SEO Tasks */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">SEO Automation Status</h2>
-              
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                  <div className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-600 mr-3" />
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">Running Tasks</div>
-                      <div className="text-xs text-gray-500">{platformStats.runningTasks} currently active</div>
-                    </div>
-                  </div>
-                  <div className="text-lg font-bold text-green-600">{platformStats.runningTasks}</div>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                  <div className="flex items-center">
-                    <AlertCircle className="w-5 h-5 text-yellow-600 mr-3" />
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">Pending Tasks</div>
-                      <div className="text-xs text-gray-500">{platformStats.pendingTasks} in queue</div>
-                    </div>
-                  </div>
-                  <div className="text-lg font-bold text-yellow-600">{platformStats.pendingTasks}</div>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center">
-                    <Zap className="w-5 h-5 text-gray-600 mr-3" />
-                    <div>
-                      <div className="text-sm font-medium text-gray-900">Total Campaigns</div>
-                      <div className="text-xs text-gray-500">{platformStats.activeCampaigns} active campaigns</div>
-                    </div>
-                  </div>
-                  <div className="text-lg font-bold text-gray-600">{platformStats.activeCampaigns}</div>
+          )}
+
+          {activeTab === 'business-intelligence' && <BusinessIntelligenceDashboard />}
+
+          {activeTab === 'execution-logs' && <SEOExecutionLogs />}
+
+          {activeTab === 'client-management' && (
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-bold text-gray-900">All Customer Accounts</h2>
+                <div className="text-sm text-gray-500">
+                  {mockBusinessesWithCampaigns.length} businesses • {mockBusinessesWithCampaigns.filter(b => b.status === 'active').length} active
                 </div>
               </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockBusinessesWithCampaigns.map((business) => (
+                  <BusinessCard key={business.id} business={business} onManageCampaigns={handleManageCampaigns} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
-      {/* Campaign Manager Modal */}
-      {showCampaignManager && selectedBusiness && (
-        <CampaignManager
-          businessId={selectedBusiness.id}
-          businessName={selectedBusiness.name}
-          onClose={() => {
-            setShowCampaignManager(false)
-            setSelectedBusiness(null)
-          }}
-        />
+      {/* SEO Services Manager Modal */}
+      {showServiceManager && selectedBusiness && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-7xl w-full max-h-[95vh] overflow-hidden flex flex-col">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">SEO Services Management</h2>
+                <p className="text-gray-600 mt-1">Managing services for {selectedBusiness.name}</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowServiceManager(false)
+                  setSelectedBusiness(null)
+                }}
+                className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            {/* Modal Content */}
+            <div className="flex-1 overflow-auto p-6">
+              <CustomerProfileManager customerId={selectedBusiness.id} />
+            </div>
+          </div>
+        </div>
       )}
     </>
   )

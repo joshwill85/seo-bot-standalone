@@ -1,85 +1,88 @@
 import { Check, Star, ArrowRight, Shield, Zap, BarChart3 } from 'lucide-react'
+import Header from '@/components/Header'
 
 const plans = [
   {
-    name: "SEO Audit",
-    price: "$64",
-    period: "one-time",
-    description: "Perfect for businesses wanting to understand their current SEO status",
+    name: "Professional",
+    price: "$149",
+    period: "per month",
+    description: "Perfect for small businesses ready to dominate local search",
     popular: false,
     features: [
-      "Complete technical SEO audit (100+ checkpoints)",
-      "Keyword opportunity analysis (up to 500 keywords)",
-      "Competitor analysis (top 5 competitors)",
-      "Local citation audit for Central Florida",
-      "Google Business Profile optimization review",
-      "Prioritized action plan with ROI estimates",
-      "1-hour consultation call",
-      "Mobile & Core Web Vitals assessment"
+      "15 Automated SEO Services (Keyword, Content, Technical)",
+      "Monthly technical audits with automated fixes",
+      "Keyword research & tracking (up to 500 keywords)",
+      "Content optimization & meta tag automation",
+      "Local SEO optimization & citation building", 
+      "Google Business Profile management",
+      "Basic competitor monitoring",
+      "Monthly performance reports",
+      "Email support with 24-hour response",
+      "Mobile optimization & Core Web Vitals"
     ],
-    cta: "Get SEO Audit",
+    cta: "Get Started",
     icon: BarChart3
   },
   {
-    name: "Growth SEO",
-    price: "$199",
-    period: "per month",
-    description: "Ideal for businesses ready to implement ongoing SEO improvements",
+    name: "Business",
+    price: "$299",
+    period: "per month", 
+    description: "Complete automation for growing businesses and agencies",
     popular: true,
     features: [
-      "Everything in SEO Audit, plus:",
-      "Monthly technical audits with issue prioritization",
-      "Keyword research and tracking (up to 1,000 keywords)",
-      "Content optimization recommendations",
-      "Local SEO monitoring and improvement",
-      "Google Business Profile management",
-      "Monthly performance reports",
-      "Bi-weekly strategy calls (30 mins)",
-      "Email support with 24-hour response",
-      "Competitor monitoring and alerts"
+      "All 39 Automated SEO Services (9 Categories)",
+      "Advanced keyword research with clustering",
+      "Content strategy automation & calendar generation",
+      "Complete technical SEO audit automation",
+      "Advanced link building & outreach automation",
+      "Comprehensive local SEO automation",
+      "Advanced competitor analysis & monitoring",
+      "Conversion optimization automation",
+      "Real-time analytics & automated reporting",
+      "Priority email & chat support"
     ],
-    cta: "Start Growth Plan",
+    cta: "Get Started",
     icon: Zap
   },
   {
-    name: "Enterprise SEO",
-    price: "$399",
+    name: "Enterprise",
+    price: "$599",
     period: "per month",
-    description: "For businesses serious about dominating their Central Florida market",
+    description: "White-label platform for agencies and enterprise clients",
     popular: false,
     features: [
-      "Everything in Growth SEO, plus:",
-      "Advanced competitor intelligence",
-      "Custom content brief generation",
-      "Advanced technical monitoring with alerts",
-      "Unlimited keyword tracking",
-      "Weekly strategy sessions (60 mins)",
-      "Priority phone and email support",
-      "White-label reporting for agencies",
+      "Everything in Business Plan, plus:",
+      "White-label dashboard & reporting",
       "API access for custom integrations",
+      "Multi-client management dashboard",
+      "Advanced automation scheduling",
+      "Custom workflow automation",
       "Dedicated account manager",
-      "Custom dashboard and analytics"
+      "Priority phone support", 
+      "Custom onboarding & training",
+      "Revenue sharing opportunities",
+      "Unlimited client projects"
     ],
-    cta: "Go Enterprise",
+    cta: "Get Started",
     icon: Shield
   }
 ]
 
 const testimonials = [
   {
-    quote: "Switched from a $2,000/month agency to Central Florida SEO's Growth plan. Same results, 90% less cost!",
+    quote: "Switched from a $2,000/month agency to their Business plan. 39 automated services vs 5 manual ones - saved $1,700/month!",
     author: "Mike Chen",
     title: "Owner, Orlando Web Design",
-    savings: "$1,800/month"
+    savings: "$1,700/month"
   },
   {
-    quote: "Their Enterprise plan gives us everything we need to manage 50+ client campaigns. The white-label reporting is perfect.",
+    quote: "Their Enterprise plan gives us everything we need to manage 50+ client campaigns. The white-label reporting and automation is incredible.",
     author: "Sarah Martinez", 
     title: "Digital Marketing Director",
     company: "Tampa Marketing Group"
   },
   {
-    quote: "The SEO audit found 23 critical issues our previous agency missed. ROI paid for itself in the first month.",
+    quote: "The automated technical audits found issues our $3,000/month agency never caught. ROI paid for itself in 2 weeks.",
     author: "David Rodriguez",
     title: "CEO, Miami Law Firm"
   }
@@ -87,7 +90,7 @@ const testimonials = [
 
 const faqs = [
   {
-    question: "Why are your prices 20% below market rates?",
+    question: "Why are your prices 75% below market rates?",
     answer: "We focus specifically on the Florida market and use advanced AI automation, allowing us to offer enterprise-level services at small business prices."
   },
   {
@@ -102,17 +105,15 @@ const faqs = [
 
 export default function PricingPage() {
   return (
-    <>
-      <title>SEO Pricing - Affordable Plans for Central Florida Businesses | Central Florida SEO</title>
-      <meta name="description" content="Transparent SEO pricing starting at $64. Professional SEO services for Orlando, Tampa, and Miami businesses. No contracts, 20% below market rates." />
-      
-      <main className="min-h-screen bg-gradient-to-br from-florida-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-florida-blue-50 to-white">
+        <Header />
+        
         {/* Hero Section */}
-        <header className="bg-florida-blue-900 text-white py-16 lg:py-20">
+        <section className="bg-florida-blue-900 text-white py-16 lg:py-20">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               Honest SEO Pricing
-              <span className="block text-florida-orange-400 mt-2">20% Below Market Rates</span>
+              <span className="block text-florida-orange-400 mt-2">75% Below Market Rates</span>
             </h1>
             <p className="text-xl md:text-2xl text-florida-blue-100 max-w-3xl mx-auto leading-relaxed mb-8">
               Professional SEO services designed specifically for Central Florida businesses. 
@@ -127,27 +128,33 @@ export default function PricingPage() {
               <span>Local Florida Expertise</span>
             </div>
           </div>
-        </header>
+        </section>
 
         {/* Pricing Cards */}
         <section className="py-16 lg:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-3 gap-8">
               {plans.map((plan, index) => (
-                <div key={index} className={`relative bg-white rounded-2xl shadow-lg overflow-hidden ${plan.popular ? 'ring-2 ring-florida-orange-500 transform scale-105' : ''}`}>
+                <div key={index} className={`relative bg-white rounded-2xl shadow-xl border flex flex-col h-full transition-all duration-300 hover:shadow-2xl ${plan.popular ? 'border-florida-orange-500 shadow-florida-orange-100' : 'border-gray-200 hover:border-florida-blue-300'}`}>
                   {plan.popular && (
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                      <div className="bg-florida-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold flex items-center space-x-1">
-                        <Star className="w-4 h-4 fill-current" />
-                        <span>Most Popular</span>
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                      <div className="bg-gradient-to-r from-florida-orange-500 to-florida-orange-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                        <div className="flex items-center space-x-2">
+                          <Star className="w-4 h-4 fill-current" />
+                          <span>MOST POPULAR</span>
+                        </div>
                       </div>
                     </div>
                   )}
                   
-                  <div className="p-8">
+                  <div className={`p-8 flex-grow flex flex-col ${plan.popular ? 'pt-12' : ''}`}>
                     <div className="flex items-center space-x-3 mb-4">
-                      <div className="w-12 h-12 bg-florida-blue-100 rounded-lg flex items-center justify-center">
-                        <plan.icon className="w-6 h-6 text-florida-blue-600" />
+                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                        plan.popular ? 'bg-florida-orange-100' : 'bg-florida-blue-100'
+                      }`}>
+                        <plan.icon className={`w-6 h-6 ${
+                          plan.popular ? 'text-florida-orange-600' : 'text-florida-blue-600'
+                        }`} />
                       </div>
                       <div>
                         <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
@@ -162,7 +169,7 @@ export default function PricingPage() {
                       <p className="text-gray-600 mt-2 leading-relaxed">{plan.description}</p>
                     </div>
 
-                    <ul className="space-y-3 mb-8">
+                    <ul className="space-y-3 mb-8 flex-grow">
                       {plan.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-start space-x-3">
                           <div className="flex-shrink-0 w-5 h-5 bg-florida-green-100 rounded-full flex items-center justify-center mt-0.5">
@@ -175,14 +182,16 @@ export default function PricingPage() {
                       ))}
                     </ul>
 
-                    <button className={`w-full py-4 px-6 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 ${
-                      plan.popular 
-                        ? 'bg-florida-orange-500 text-white hover:bg-florida-orange-600' 
-                        : 'bg-florida-blue-600 text-white hover:bg-florida-blue-700'
-                    }`}>
-                      <span>{plan.cta}</span>
-                      <ArrowRight className="w-5 h-5" />
-                    </button>
+                    <div className="mt-auto">
+                      <button className={`w-full py-4 px-6 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 ${
+                        plan.popular 
+                          ? 'bg-florida-orange-500 text-white hover:bg-florida-orange-600' 
+                          : 'bg-florida-blue-600 text-white hover:bg-florida-blue-700'
+                      }`}>
+                        <span>{plan.cta}</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -229,12 +238,12 @@ export default function PricingPage() {
                     <tr>
                       <td className="px-6 py-4 font-semibold">Monthly SEO Service</td>
                       <td className="px-6 py-4 text-center text-gray-600">$800 - $2,500</td>
-                      <td className="px-6 py-4 text-center font-semibold text-florida-orange-600">$199 - $399</td>
+                      <td className="px-6 py-4 text-center font-semibold text-florida-orange-600">$149 - $599</td>
                     </tr>
                     <tr className="bg-gray-50">
-                      <td className="px-6 py-4 font-semibold">SEO Audit</td>
-                      <td className="px-6 py-4 text-center text-gray-600">$500 - $1,200</td>
-                      <td className="px-6 py-4 text-center font-semibold text-florida-orange-600">$64</td>
+                      <td className="px-6 py-4 font-semibold">SEO Services Included</td>
+                      <td className="px-6 py-4 text-center text-gray-600">5-10 Manual Services</td>
+                      <td className="px-6 py-4 text-center font-semibold text-florida-orange-600">39 Automated Services</td>
                     </tr>
                     <tr>
                       <td className="px-6 py-4 font-semibold">Contract Requirement</td>
@@ -356,7 +365,6 @@ export default function PricingPage() {
             </p>
           </div>
         </section>
-      </main>
-    </>
-  )
+      </div>
+    )
 }

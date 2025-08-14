@@ -115,22 +115,23 @@ export interface SEOReportResults {
 
 // Pricing types
 export interface PricingPlan {
-  id: 'starter' | 'professional' | 'enterprise'
+  id: 'professional' | 'business' | 'enterprise'
   name: string
   monthlyPrice: number
   yearlyPrice: number
   features: string[]
   limits: {
-    reportsPerMonth: number
+    seoServices: number
     keywordsPerResearch: number | 'unlimited'
     businesses: number
+    automationLevel: 'basic' | 'full' | 'white-label'
   }
   popular?: boolean
 }
 
 export interface Subscription {
   businessId: number
-  planTier: 'starter' | 'professional' | 'enterprise'
+  planTier: 'professional' | 'business' | 'enterprise'
   billingCycle: 'monthly' | 'yearly'
   subscriptionStatus: 'trial' | 'active' | 'suspended' | 'cancelled' | 'past_due' | 'incomplete'
   trialEndsAt?: string
@@ -174,7 +175,7 @@ export interface BusinessFormData {
   phone?: string
   targetKeywords?: string[]
   competitors?: string[]
-  planTier: 'starter' | 'professional' | 'enterprise'
+  planTier: 'professional' | 'business' | 'enterprise'
 }
 
 // Analytics types
